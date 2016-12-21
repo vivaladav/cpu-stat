@@ -7,16 +7,12 @@
 class CPUData
 {
 public:
-	CPUData();
-
 	void ReadData(const std::string & line);
 
 	std::size_t GetActiveTime() const;
 	std::size_t GetIdleTime() const;
 
 	const std::string & GetLabel() const;
-
-	bool IsTotal() const;
 
 public:
 	static bool IsDataCPUStats(const std::string & line);
@@ -48,11 +44,7 @@ private:
 	std::string mLabel;
 	
 	std::size_t mTimes[NUM_CPU_STATES];
-
-	bool mTotal;
 };
-
-inline CPUData::CPUData() : mTotal(false) { }
 
 inline 	std::size_t CPUData::GetActiveTime() const
 {
@@ -72,6 +64,3 @@ inline std::size_t CPUData::GetIdleTime() const
 }
 
 inline const std::string & CPUData::GetLabel() const { return mLabel; }
-
-inline bool CPUData::IsTotal() const { return mTotal; }
-

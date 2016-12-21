@@ -19,11 +19,7 @@ void CPUData::ReadData(const std::string & line)
 	    mLabel.erase(0, LEN_STR_CPU);
 	// replace "cpu" with "tot" when it's total values
 	else
-	{
-		mTotal = true;
-
 	    mLabel = STR_TOT;
-	}
 
 	// read times
 	for(int i = 0; i < NUM_CPU_STATES; ++i)

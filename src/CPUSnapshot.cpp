@@ -3,7 +3,6 @@
 #include <fstream>
 
 CPUSnapshot::CPUSnapshot()
-	: mIndexTot(0)
 {
 	std::ifstream fileStat("/proc/stat");
 
@@ -19,10 +18,6 @@ CPUSnapshot::CPUSnapshot()
 			CPUData & entry = mEntries.back();
 
 			entry.ReadData(line);
-
-			// save index of total
-			if(entry.IsTotal())
-				mIndexTot = mEntries.size() - 1;	
 		}
 	}
 }
