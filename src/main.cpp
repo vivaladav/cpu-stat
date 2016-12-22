@@ -15,6 +15,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include <thread>
 
 // -- PROGRAM DATA --
@@ -23,12 +24,19 @@ const char * STR_APP_VERSION			= "0.00.03";
 
 // -- SHORT OPTIONS --
 const char * STR_OPT_ALL				= "-a";
+const char * STR_OPT_DELAY				= "-d";
 const char * STR_OPT_HELP				= "-h";
+const char * STR_OPT_PRECISION			= "-p";
 
 // -- LONG OPTIONS --
 const char * STR_LONGOPT_ALL			= "--all";
 const char * STR_LONGOPT_HELP			= "--help";
 const char * STR_LONGOPT_VERSION		= "--version";
+
+// -- ERRORS --
+const char * STR_ERR					= "ERROR - ";
+const char * STR_ERR_PARAM				= "wrong/missing parameter";
+const char * STR_ERR_UNKNOWN_OPT		= "unknown option.";
 
 void PrintHelp();
 void PrintUsage();
@@ -37,7 +45,12 @@ void PrintVersion();
 int main(int argc, char * argv[])
 {
 	// -- PARSE OPTIONS --
-	bool printAll = false;
+	bool optPrintAll = false;
+
+	int optDelay = 100;
+	const int MIN_DELAY = 33;
+
+	unsigned int optPrecision = 2;
 
 	// skip program name
 	int index = 1;
@@ -47,7 +60,42 @@ int main(int argc, char * argv[])
 		std::string arg(argv[index]);
 
 		if(STR_OPT_ALL == arg || arg == STR_LONGOPT_ALL)
-			printAll = true;
+			optPrintAll = true;
+		else if(STR_OPT_DELAY == arg)
+		{
+			std::string param(argv[++index]);
+
+			try
+			{
+				optDelay = std::stoi(param);
+
+				if(optDelay < MIN_DELAY)
+					optDelay = MIN_DELAY;
+			}
+			catch(std::logic_error e)
+			{
+				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
+
+				PrintUsage();
+				return 1;
+			}
+		}
+		else if(STR_OPT_PRECISION == arg)
+		{
+			std::string param(argv[++index]);
+
+			try
+			{
+				optPrecision = std::stoi(param);
+			}
+			catch(std::logic_error e)
+			{
+				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
+
+				PrintUsage();
+				return 1;
+			}
+		}
 		else if(STR_OPT_HELP == arg || STR_LONGOPT_HELP == arg)
 		{
 			PrintHelp();
@@ -60,8 +108,10 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
+			std::cout << STR_ERR << STR_ERR_UNKNOWN_OPT << std::endl;
+
 			PrintUsage();
-			return 0;
+			return 1;
 		}
 
 		++index;
@@ -72,7 +122,7 @@ int main(int argc, char * argv[])
 	CPUSnapshot s1;
 
 	// 100ms pause
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::this_thread::sleep_for(std::chrono::milliseconds(optDelay));
 
 	// snapshot 2
 	CPUSnapshot s2;
@@ -80,7 +130,9 @@ int main(int argc, char * argv[])
 	// -- PRINT STATS --
 	CPUStatsPrinter printer(s1, s2);
 
-	if(printAll)
+	printer.SetPrecision(optPrecision);
+
+	if(optPrintAll)
 		printer.PrintActivePercentageAll();
 	else
 		printer.PrintActivePercentageTotal();
@@ -96,25 +148,30 @@ void PrintHelp()
 
 	std::cout << std::endl;
 
-	std::cout << "launching the program with no options will print the active time percentage of the total CPU" << std::endl;
+	std::cout << "launching the program with no option will print the active time percentage of the total CPU" << std::endl;
 
 	std::cout << std::endl;
 
 	std::cout << "PRINT OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers." << std::endl;
 
 	std::cout << std::endl;
 
 	std::cout << "OTHER OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_HELP << " | " << STR_LONGOPT_HELP << "\t\t" << "print this help." << std::endl;
 	std::cout << STR_LMARGIN << STR_LONGOPT_VERSION << "\t\t" << "print the version number" << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_DELAY << " <time>" << "\t\t" << "set delay time (in milliseconds) between 2 snapshots of CPU data." << std::endl;
 
 	std::cout << std::endl;
 }
 
 void PrintUsage()
 {
-	std::cout << "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP << "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "]" << std::endl;
+	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
+				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
+				<< STR_OPT_PRECISION << " <precision>]"
+				<< std::endl;
 }
 
 void PrintVersion()
