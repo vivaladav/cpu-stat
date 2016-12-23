@@ -37,22 +37,31 @@ void CPUStatsPrinter::PrintActivePercentageAll()
 	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
 
 	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
+		PrintActivePercentageCPU(i);
+}
+
+void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
+{
+	if(cpu >= mS1.GetNumEntries())
 	{
-		if(mVerbose)
-		{
-			std::cout.width(CPU_LABEL_W);
-			std::cout << mS1.GetLabel(i) << "] ";
-		}
-
-		std::cout.setf(std::ios::fixed, std::ios::floatfield);
-		std::cout.precision(mPrecision);
-		std::cout << GetPercActive(i);
-
-		if(mVerbose)
-			std::cout << "%";
-
-		std::cout << std::endl;
+		std::cout << "ERROR - CPU " << cpu << " not available." << std::endl;
+		return ;
 	}
+
+	if(mVerbose)
+	{
+		std::cout.width(CPU_LABEL_W);
+		std::cout << mS1.GetLabel(cpu) << "] ";
+	}
+
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(mPrecision);
+	std::cout << GetPercActive(cpu);
+
+	if(mVerbose)
+		std::cout << "%";
+
+	std::cout << std::endl;
 }
 
 float CPUStatsPrinter::GetPercActiveTotal()

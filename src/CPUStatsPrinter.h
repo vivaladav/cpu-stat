@@ -7,6 +7,7 @@ public:
 
 	void PrintActivePercentageTotal();
 	void PrintActivePercentageAll();
+	void PrintActivePercentageCPU(unsigned int cpu);
 
 	void SetPrecision(unsigned int prec);
 

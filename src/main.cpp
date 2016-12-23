@@ -24,6 +24,7 @@ const char * STR_APP_VERSION			= "0.00.03";
 
 // -- SHORT OPTIONS --
 const char * STR_OPT_ALL				= "-a";
+const char * STR_OPT_CPU				= "-c";
 const char * STR_OPT_DELAY				= "-d";
 const char * STR_OPT_HELP				= "-h";
 const char * STR_OPT_PRECISION			= "-p";
@@ -54,6 +55,8 @@ int main(int argc, char * argv[])
 	unsigned int optPrecision = 2;
 
 	bool optVerbose = false;
+
+	int optCPU = -1;
 
 	// skip program name
 	int index = 1;
@@ -90,6 +93,22 @@ int main(int argc, char * argv[])
 			try
 			{
 				optPrecision = std::stoi(param);
+			}
+			catch(std::logic_error e)
+			{
+				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
+
+				PrintUsage();
+				return 1;
+			}
+		}
+		else if(STR_OPT_CPU == arg)
+		{
+			std::string param(argv[++index]);
+
+			try
+			{
+				optCPU = std::stoi(param);
 			}
 			catch(std::logic_error e)
 			{
@@ -140,6 +159,8 @@ int main(int argc, char * argv[])
 
 	if(optPrintAll)
 		printer.PrintActivePercentageAll();
+	else if(optCPU >= 0)
+		printer.PrintActivePercentageCPU(optCPU);
 	else
 		printer.PrintActivePercentageTotal();
 
@@ -160,6 +181,7 @@ void PrintHelp()
 
 	std::cout << "PRINT OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print active time percentage only for selected CPU." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers. Default is 2." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_VERBOSE << "\t\t\t" << "enable verbose mode." << std::endl;
 	std::cout << std::endl;
@@ -174,10 +196,12 @@ void PrintHelp()
 
 void PrintUsage()
 {
+	const char * STR_LMARGIN = "                ";
+
 	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
 				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
 				<< STR_OPT_PRECISION << " <precision>]" << std::endl
-				<< "\t\t" << "[" << STR_OPT_VERBOSE << "]"
+				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_VERBOSE << "]"
 				<< std::endl;
 }
 
