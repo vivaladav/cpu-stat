@@ -22,6 +22,12 @@ public:
 	std::size_t GetIdleTimeTotal() const;
 	std::size_t GetIdleTime(unsigned int cpu) const;
 
+	std::size_t GetStateTimeTotal(unsigned int state) const;
+	std::size_t GetStateTime(unsigned int state, unsigned int cpu) const;
+
+	std::size_t GetTotalTimeTotal() const;
+	std::size_t GetTotalTime(unsigned int cpu) const;
+
 private:
 	static const int INDEX_TOT = 0;
 
@@ -46,8 +52,8 @@ inline const char * CPUSnapshot::GetLabel(unsigned int cpu) const
 
 inline std::size_t CPUSnapshot::GetActiveTimeTotal() const { return mEntries[INDEX_TOT].GetActiveTime(); }
 
-inline std::size_t CPUSnapshot::GetActiveTime(unsigned int cpu) const 
-{ 
+inline std::size_t CPUSnapshot::GetActiveTime(unsigned int cpu) const
+{
 	// skip total
 	++cpu;
 
@@ -66,6 +72,32 @@ inline std::size_t CPUSnapshot::GetIdleTime(unsigned int cpu) const
 
 	if(cpu < mEntries.size())
 		return mEntries[cpu].GetIdleTime();
+	else
+		return 0;
+}
+
+inline std::size_t CPUSnapshot::GetStateTimeTotal(unsigned int state) const { return mEntries[INDEX_TOT].GetStateTime(state); }
+
+inline std::size_t CPUSnapshot::GetStateTime(unsigned int state, unsigned int cpu) const
+{
+	// skip total
+	++cpu;
+
+	if(cpu < mEntries.size())
+		return mEntries[cpu].GetStateTime(state);
+	else
+		return 0;
+}
+
+inline std::size_t CPUSnapshot::GetTotalTimeTotal() const { return mEntries[INDEX_TOT].GetTotalTime(); }
+
+inline std::size_t CPUSnapshot::GetTotalTime(unsigned int cpu) const
+{
+	// skip total
+	++cpu;
+
+	if(cpu < mEntries.size())
+		return mEntries[cpu].GetTotalTime();
 	else
 		return 0;
 }

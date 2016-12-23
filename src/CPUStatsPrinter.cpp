@@ -4,6 +4,17 @@
 
 #include <iostream>
 
+const char * CPUStatsPrinter::STR_STATES[CPUData::NUM_CPU_STATES]	= {	"usr",
+																		"sys",
+																		"nic",
+																		"idl",
+																		"iow",
+																		"hir",
+																		"sir",
+																		"ste",
+																		"gue",
+																		"nig" };
+
 CPUStatsPrinter::CPUStatsPrinter(const CPUSnapshot& s1, const CPUSnapshot& s2)
 	: mS1(s1)
 	, mS2(s2)
@@ -64,6 +75,52 @@ void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
 	std::cout << std::endl;
 }
 
+void CPUStatsPrinter::PrintStatePercentageTotal(unsigned int state)
+{
+	if(mVerbose)
+		std::cout << mS1.GetLabelTotal() << "] ";
+
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(mPrecision);
+	std::cout << GetPercStateTotal(state);
+
+	if(mVerbose)
+		std::cout << "%";
+
+	std::cout << std::endl;
+}
+
+void CPUStatsPrinter::PrintStatePercentageAll(unsigned int state)
+{
+	// PRINT TOTAL
+	PrintStatePercentageTotal(state);
+
+	// PRINT ALL CPUS
+	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
+
+	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
+		PrintStatePercentageCPU(state, i);
+}
+
+void CPUStatsPrinter::PrintStatePercentageCPU(unsigned int state, unsigned int cpu)
+{
+	if(cpu >= mS1.GetNumEntries())
+	{
+		std::cout << "ERROR - CPU " << cpu << " not available." << std::endl;
+		return ;
+	}
+
+	if(mVerbose)
+	{
+		std::cout.width(CPU_LABEL_W);
+		std::cout << mS1.GetLabel(cpu) << "] ";
+	}
+
+	PrintStatePercentageNoLabelCPU(state, cpu);
+
+	std::cout << std::endl;
+}
+
 float CPUStatsPrinter::GetPercActiveTotal()
 {
 	const float ACTIVE_TIME		= mS2.GetActiveTimeTotal() - mS1.GetActiveTimeTotal();
@@ -80,4 +137,33 @@ float CPUStatsPrinter::GetPercActive(unsigned int cpu)
 	const float TOTAL_TIME		= ACTIVE_TIME + IDLE_TIME;
 
 	return 100.f * ACTIVE_TIME / TOTAL_TIME;
+}
+
+float CPUStatsPrinter::GetPercStateTotal(unsigned int state)
+{
+	const float STATE_TIME	= mS2.GetStateTimeTotal(state) - mS1.GetStateTimeTotal(state);
+	const float TOTAL_TIME	= mS2.GetTotalTimeTotal() - mS1.GetTotalTimeTotal();
+
+	return 100.f * STATE_TIME / TOTAL_TIME;
+}
+
+float CPUStatsPrinter::GetPercState(unsigned int state, unsigned int cpu)
+{
+	const float STATE_TIME	= mS2.GetStateTime(state, cpu) - mS1.GetStateTime(state, cpu);
+	const float TOTAL_TIME	= mS2.GetTotalTime(cpu) - mS1.GetTotalTime(cpu);
+
+	return 100.f * STATE_TIME / TOTAL_TIME;
+}
+
+void CPUStatsPrinter::PrintStatePercentageNoLabelCPU(unsigned int state, unsigned int cpu)
+{
+	if(mVerbose)
+		std::cout << STR_STATES[state] << ": ";
+
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(mPrecision);
+	std::cout << GetPercState(state, cpu);
+
+	if(mVerbose)
+		std::cout << "%";
 }

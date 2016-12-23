@@ -12,14 +12,16 @@ public:
 	std::size_t GetActiveTime() const;
 	std::size_t GetIdleTime() const;
 
+	std::size_t GetStateTime(unsigned int state) const;
+
+	std::size_t GetTotalTime() const;
+
 	const std::string & GetLabel() const;
 
 public:
 	static bool IsDataCPUStats(const std::string & line);
 
 public:
-	static const int NUM_CPU_STATES = 10;
-
 	enum CPUStates
 	{
 		S_USER = 0,
@@ -31,7 +33,9 @@ public:
 	    S_SOFTIRQ,
 	    S_STEAL,
 	    S_GUEST,
-	    S_GUEST_NICE
+	    S_GUEST_NICE,
+
+		NUM_CPU_STATES
 	};
 
 private:
@@ -42,7 +46,7 @@ private:
 
 private:
 	std::string mLabel;
-	
+
 	std::size_t mTimes[NUM_CPU_STATES];
 };
 
@@ -61,6 +65,28 @@ inline 	std::size_t CPUData::GetActiveTime() const
 inline std::size_t CPUData::GetIdleTime() const
 {
 	return mTimes[S_IDLE] + mTimes[S_IOWAIT];
+}
+
+inline std::size_t CPUData::GetStateTime(unsigned int state) const
+{
+	if(state < NUM_CPU_STATES)
+		return mTimes[state];
+	else
+		return 0;
+}
+
+inline std::size_t CPUData::GetTotalTime() const
+{
+	return	mTimes[S_USER] +
+			mTimes[S_NICE] +
+			mTimes[S_SYSTEM] +
+			mTimes[S_IDLE] +
+			mTimes[S_IOWAIT] +
+			mTimes[S_IRQ] +
+			mTimes[S_SOFTIRQ] +
+			mTimes[S_STEAL] +
+			mTimes[S_GUEST] +
+			mTimes[S_GUEST_NICE];
 }
 
 inline const std::string & CPUData::GetLabel() const { return mLabel; }
