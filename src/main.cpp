@@ -27,6 +27,7 @@ const char * STR_OPT_ALL				= "-a";
 const char * STR_OPT_DELAY				= "-d";
 const char * STR_OPT_HELP				= "-h";
 const char * STR_OPT_PRECISION			= "-p";
+const char * STR_OPT_VERBOSE			= "-v";
 
 // -- LONG OPTIONS --
 const char * STR_LONGOPT_ALL			= "--all";
@@ -51,6 +52,8 @@ int main(int argc, char * argv[])
 	const int MIN_DELAY = 33;
 
 	unsigned int optPrecision = 2;
+
+	bool optVerbose = false;
 
 	// skip program name
 	int index = 1;
@@ -96,6 +99,8 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 		}
+		else if(STR_OPT_VERBOSE == arg)
+			optVerbose = true;
 		else if(STR_OPT_HELP == arg || STR_LONGOPT_HELP == arg)
 		{
 			PrintHelp();
@@ -131,6 +136,7 @@ int main(int argc, char * argv[])
 	CPUStatsPrinter printer(s1, s2);
 
 	printer.SetPrecision(optPrecision);
+	printer.SetVerbose(optVerbose);
 
 	if(optPrintAll)
 		printer.PrintActivePercentageAll();
@@ -154,14 +160,14 @@ void PrintHelp()
 
 	std::cout << "PRINT OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers." << std::endl;
-
+	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers. Default is 2." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_VERBOSE << "\t\t\t" << "enable verbose mode." << std::endl;
 	std::cout << std::endl;
 
 	std::cout << "OTHER OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_HELP << " | " << STR_LONGOPT_HELP << "\t\t" << "print this help." << std::endl;
 	std::cout << STR_LMARGIN << STR_LONGOPT_VERSION << "\t\t" << "print the version number" << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_DELAY << " <time>" << "\t\t" << "set delay time (in milliseconds) between 2 snapshots of CPU data." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_DELAY << " <time>" << "\t\t" << "set delay time (in ms) between 2 snapshots of CPU data. Default is 100 ms." << std::endl;
 
 	std::cout << std::endl;
 }
@@ -170,7 +176,8 @@ void PrintUsage()
 {
 	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
 				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
-				<< STR_OPT_PRECISION << " <precision>]"
+				<< STR_OPT_PRECISION << " <precision>]" << std::endl
+				<< "\t\t" << "[" << STR_OPT_VERBOSE << "]"
 				<< std::endl;
 }
 

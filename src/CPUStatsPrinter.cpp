@@ -7,16 +7,25 @@
 CPUStatsPrinter::CPUStatsPrinter(const CPUSnapshot& s1, const CPUSnapshot& s2)
 	: mS1(s1)
 	, mS2(s2)
-	, mPrecision(2) // default precision
+	, mPrecision(2)
+	, mVerbose(false)
 {
 
 }
 
 void CPUStatsPrinter::PrintActivePercentageTotal()
 {
+	if(mVerbose)
+		std::cout << mS1.GetLabelTotal() << "] ";
+
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(mPrecision);
-	std::cout << GetPercActiveTotal() << std::endl;
+	std::cout << GetPercActiveTotal();
+
+	if(mVerbose)
+		std::cout << "%";
+
+	std::cout << std::endl;
 }
 
 void CPUStatsPrinter::PrintActivePercentageAll()
@@ -29,9 +38,20 @@ void CPUStatsPrinter::PrintActivePercentageAll()
 
 	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
 	{
+		if(mVerbose)
+		{
+			std::cout.width(CPU_LABEL_W);
+			std::cout << mS1.GetLabel(i) << "] ";
+		}
+
 		std::cout.setf(std::ios::fixed, std::ios::floatfield);
 		std::cout.precision(mPrecision);
-		std::cout << GetPercActive(i) << std::endl;
+		std::cout << GetPercActive(i);
+
+		if(mVerbose)
+			std::cout << "%";
+
+		std::cout << std::endl;
 	}
 }
 
