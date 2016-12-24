@@ -28,6 +28,7 @@ const char * STR_OPT_CPU				= "-c";
 const char * STR_OPT_DELAY				= "-d";
 const char * STR_OPT_HELP				= "-h";
 const char * STR_OPT_PRECISION			= "-p";
+const char * STR_OPT_STATE				= "-s";
 const char * STR_OPT_VERBOSE			= "-v";
 
 // -- LONG OPTIONS --
@@ -57,6 +58,8 @@ int main(int argc, char * argv[])
 	bool optVerbose = false;
 
 	int optCPU = -1;
+
+	int optState = -1;
 
 	// skip program name
 	int index = 1;
@@ -118,6 +121,22 @@ int main(int argc, char * argv[])
 				return 1;
 			}
 		}
+		else if(STR_OPT_STATE == arg)
+		{
+			std::string param(argv[++index]);
+
+			try
+			{
+				optState = std::stoi(param);
+			}
+			catch(std::logic_error e)
+			{
+				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
+
+				PrintUsage();
+				return 1;
+			}
+		}
 		else if(STR_OPT_VERBOSE == arg)
 			optVerbose = true;
 		else if(STR_OPT_HELP == arg || STR_LONGOPT_HELP == arg)
@@ -158,11 +177,26 @@ int main(int argc, char * argv[])
 	printer.SetVerbose(optVerbose);
 
 	if(optPrintAll)
-		printer.PrintActivePercentageAll();
+	{
+		if(optState >= 0)
+			printer.PrintStatePercentageAll(optState);
+		else
+			printer.PrintActivePercentageAll();
+	}
 	else if(optCPU >= 0)
-		printer.PrintActivePercentageCPU(optCPU);
+	{
+		if(optState >= 0)
+			printer.PrintStatePercentageCPU(optState, optCPU);
+		else
+			printer.PrintActivePercentageCPU(optCPU);
+	}
 	else
-		printer.PrintActivePercentageTotal();
+	{
+		if(optState >= 0)
+			printer.PrintStatePercentageTotal(optState);
+		else
+			printer.PrintActivePercentageTotal();
+	}
 
 	return 0;
 }
@@ -183,6 +217,7 @@ void PrintHelp()
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print active time percentage only for selected CPU." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers. Default is 2." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_STATE << " <state>" << "\t\t" << "print time percentage for specific state [0-9]." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_VERBOSE << "\t\t\t" << "enable verbose mode." << std::endl;
 	std::cout << std::endl;
 
@@ -201,7 +236,7 @@ void PrintUsage()
 	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
 				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
 				<< STR_OPT_PRECISION << " <precision>]" << std::endl
-				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_VERBOSE << "]"
+				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_VERBOSE << "] [" << STR_OPT_STATE << " <state>]"
 				<< std::endl;
 }
 

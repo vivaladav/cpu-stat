@@ -78,7 +78,7 @@ void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
 void CPUStatsPrinter::PrintStatePercentageTotal(unsigned int state)
 {
 	if(mVerbose)
-		std::cout << mS1.GetLabelTotal() << "] ";
+		std::cout << mS1.GetLabelTotal() << "] " << STR_STATES[state] << ": ";
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(mPrecision);
