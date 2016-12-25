@@ -186,7 +186,7 @@ void OptionsParser::PrintHelp()
 
 	std::cout << "PRINT OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print active time percentage only for selected CPU." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print stats only for selected CPU." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_FULL << " | " << STR_LONGOPT_FULL << "\t" << "print time percentage of all states." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the decimal precision of printed numbers. Default is 2." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_STATE << " <state>" << "\t\t" << "print time percentage for specific state [0-9]." << std::endl;
