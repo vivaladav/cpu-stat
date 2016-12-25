@@ -15,6 +15,10 @@ public:
 	void PrintStatePercentageCPU(unsigned int state, unsigned int cpu);
 	void PrintStatePercentageAll(unsigned int state);
 
+	void PrintFullStatePercentageTotal();
+	void PrintFullStatePercentageCPU(unsigned int cpu);
+	void PrintFullStatePercentageAll();
+
 	void SetPrecision(unsigned int prec);
 
 	void SetVerbose(bool val);
@@ -26,6 +30,7 @@ private:
 	float GetPercStateTotal(unsigned int state);
 	float GetPercState(unsigned int state, unsigned int cpu);
 
+	void PrintStatePercentageNoLabelTotal(unsigned int state);
 	void PrintStatePercentageNoLabelCPU(unsigned int state, unsigned int cpu);
 
 private:

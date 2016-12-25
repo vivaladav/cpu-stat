@@ -26,6 +26,7 @@ const char * STR_APP_VERSION			= "0.00.03";
 const char * STR_OPT_ALL				= "-a";
 const char * STR_OPT_CPU				= "-c";
 const char * STR_OPT_DELAY				= "-d";
+const char * STR_OPT_FULL				= "-f";
 const char * STR_OPT_HELP				= "-h";
 const char * STR_OPT_PRECISION			= "-p";
 const char * STR_OPT_STATE				= "-s";
@@ -60,6 +61,8 @@ int main(int argc, char * argv[])
 	int optCPU = -1;
 
 	int optState = -1;
+
+	bool optFull = false;
 
 	// skip program name
 	int index = 1;
@@ -139,6 +142,8 @@ int main(int argc, char * argv[])
 		}
 		else if(STR_OPT_VERBOSE == arg)
 			optVerbose = true;
+		else if(STR_OPT_FULL == arg)
+			optFull = true;
 		else if(STR_OPT_HELP == arg || STR_LONGOPT_HELP == arg)
 		{
 			PrintHelp();
@@ -178,21 +183,27 @@ int main(int argc, char * argv[])
 
 	if(optPrintAll)
 	{
-		if(optState >= 0)
+		if(optFull)
+			printer.PrintFullStatePercentageAll();
+		else if(optState >= 0)
 			printer.PrintStatePercentageAll(optState);
 		else
 			printer.PrintActivePercentageAll();
 	}
 	else if(optCPU >= 0)
 	{
-		if(optState >= 0)
+		if(optFull)
+			printer.PrintFullStatePercentageCPU(optCPU);
+		else if(optState >= 0)
 			printer.PrintStatePercentageCPU(optState, optCPU);
 		else
 			printer.PrintActivePercentageCPU(optCPU);
 	}
 	else
 	{
-		if(optState >= 0)
+		if(optFull)
+			printer.PrintFullStatePercentageTotal();
+		else if(optState >= 0)
 			printer.PrintStatePercentageTotal(optState);
 		else
 			printer.PrintActivePercentageTotal();

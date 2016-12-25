@@ -78,14 +78,9 @@ void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
 void CPUStatsPrinter::PrintStatePercentageTotal(unsigned int state)
 {
 	if(mVerbose)
-		std::cout << mS1.GetLabelTotal() << "] " << STR_STATES[state] << ": ";
+		std::cout << mS1.GetLabelTotal() << "] ";
 
-	std::cout.setf(std::ios::fixed, std::ios::floatfield);
-	std::cout.precision(mPrecision);
-	std::cout << GetPercStateTotal(state);
-
-	if(mVerbose)
-		std::cout << "%";
+	PrintStatePercentageNoLabelTotal(state);
 
 	std::cout << std::endl;
 }
@@ -121,6 +116,54 @@ void CPUStatsPrinter::PrintStatePercentageCPU(unsigned int state, unsigned int c
 	std::cout << std::endl;
 }
 
+void CPUStatsPrinter::PrintFullStatePercentageTotal()
+{
+	if(mVerbose)
+		std::cout << mS1.GetLabelTotal() << "] ";
+
+	const int LIMIT = CPUData::NUM_CPU_STATES - 1;
+
+	for(int s = 0; s < LIMIT; ++s)
+	{
+		PrintStatePercentageNoLabelTotal(s);
+		std::cout << " - ";
+	}
+
+	PrintStatePercentageNoLabelTotal(LIMIT);
+
+	std::cout << std::endl;
+}
+
+void CPUStatsPrinter::PrintFullStatePercentageCPU(unsigned int cpu)
+{
+	if(mVerbose)
+		std::cout << mS1.GetLabel(cpu) << "] ";
+
+	const int LIMIT = CPUData::NUM_CPU_STATES - 1;
+
+	for(int s = 0; s < LIMIT; ++s)
+	{
+		PrintStatePercentageNoLabelCPU(s, cpu);
+		std::cout << " - ";
+	}
+
+	PrintStatePercentageNoLabelCPU(LIMIT, cpu);
+
+	std::cout << std::endl;
+}
+
+void CPUStatsPrinter::PrintFullStatePercentageAll()
+{
+	// PRINT TOTAL
+	PrintFullStatePercentageTotal();
+
+	// PRINT ALL CPUS
+	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
+
+	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
+		PrintFullStatePercentageCPU(i);
+}
+
 float CPUStatsPrinter::GetPercActiveTotal()
 {
 	const float ACTIVE_TIME		= mS2.GetActiveTimeTotal() - mS1.GetActiveTimeTotal();
@@ -153,6 +196,19 @@ float CPUStatsPrinter::GetPercState(unsigned int state, unsigned int cpu)
 	const float TOTAL_TIME	= mS2.GetTotalTime(cpu) - mS1.GetTotalTime(cpu);
 
 	return 100.f * STATE_TIME / TOTAL_TIME;
+}
+
+void CPUStatsPrinter::PrintStatePercentageNoLabelTotal(unsigned int state)
+{
+	if(mVerbose)
+		std:: cout << STR_STATES[state] << ": ";
+
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(mPrecision);
+	std::cout << GetPercStateTotal(state);
+
+	if(mVerbose)
+		std::cout << "%";
 }
 
 void CPUStatsPrinter::PrintStatePercentageNoLabelCPU(unsigned int state, unsigned int cpu)
