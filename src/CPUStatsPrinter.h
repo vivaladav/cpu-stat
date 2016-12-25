@@ -34,7 +34,8 @@ private:
 	void PrintStatePercentageNoLabelCPU(unsigned int state, unsigned int cpu);
 
 private:
-	static const int CPU_LABEL_W = 3;
+	static const int CPU_LABEL_W;
+	static const int STATE_PERC_BASE_W;
 
 	static const char * STR_STATES[CPUData::NUM_CPU_STATES];
 

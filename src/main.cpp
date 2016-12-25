@@ -6,6 +6,7 @@
  *	0.00.01		19-Dec-2016		First basic version.
  *	0.00.02		21-Dec-2016		New code design.
  *	0.00.03		22-Dec-2016		Introduced options.
+ *	0.01.00		25-Dec-2016		Implemented all basic features.
  *
 */
 
@@ -20,7 +21,7 @@
 
 // -- PROGRAM DATA --
 const char * STR_APP_NAME				= "cpp-stat";
-const char * STR_APP_VERSION			= "0.00.03";
+const char * STR_APP_VERSION			= "0.01.00";
 
 // -- SHORT OPTIONS --
 const char * STR_OPT_ALL				= "-a";
@@ -227,7 +228,8 @@ void PrintHelp()
 	std::cout << "PRINT OPTIONS" << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print active time percentage only for selected CPU." << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the deciaml precision of printed numbers. Default is 2." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_FULL << "\t\t\t" << "print time percentage of all states." << std::endl;
+	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the decimal precision of printed numbers. Default is 2." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_STATE << " <state>" << "\t\t" << "print time percentage for specific state [0-9]." << std::endl;
 	std::cout << STR_LMARGIN << STR_OPT_VERBOSE << "\t\t\t" << "enable verbose mode." << std::endl;
 	std::cout << std::endl;
@@ -247,7 +249,7 @@ void PrintUsage()
 	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
 				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
 				<< STR_OPT_PRECISION << " <precision>]" << std::endl
-				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_VERBOSE << "] [" << STR_OPT_STATE << " <state>]"
+				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_FULL << "] [" << STR_OPT_VERBOSE << "] [" << STR_OPT_STATE << " <state>]"
 				<< std::endl;
 }
 
