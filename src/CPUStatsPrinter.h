@@ -52,6 +52,8 @@ private:
 	bool mVerbose;
 };
 
+// == INLINE FUNCTIONS ==
+
 inline void CPUStatsPrinter::SetPrecision(unsigned int prec) { mPrecision = prec; }
 
 inline void CPUStatsPrinter::SetVerbose(bool val) { mVerbose = val; }

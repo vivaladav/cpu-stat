@@ -35,6 +35,8 @@ private:
 	std::vector<CPUData> mEntries;
 };
 
+// == INLINE FUNCTIONS ==
+
 inline std::size_t CPUSnapshot::GetNumEntries() const { return mEntries.size() - 1; }
 
 inline const char * CPUSnapshot::GetLabelTotal() const { return mEntries[INDEX_TOT].GetLabel().c_str(); }

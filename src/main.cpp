@@ -7,171 +7,40 @@
  *	0.00.02		21-Dec-2016		New code design.
  *	0.00.03		22-Dec-2016		Introduced options.
  *	0.01.00		25-Dec-2016		Implemented all basic features.
+ *	0.01.01		25-Dec-2016		Introduced OptionsParser and code polishing.
  *
 */
 
 #include "CPUSnapshot.h"
 #include "CPUStatsPrinter.h"
+#include "OptionsParser.h"
 
 #include <chrono>
-#include <iostream>
-#include <string>
-#include <stdexcept>
 #include <thread>
 
 // -- PROGRAM DATA --
 const char * STR_APP_NAME				= "cpp-stat";
-const char * STR_APP_VERSION			= "0.01.00";
-
-// -- SHORT OPTIONS --
-const char * STR_OPT_ALL				= "-a";
-const char * STR_OPT_CPU				= "-c";
-const char * STR_OPT_DELAY				= "-d";
-const char * STR_OPT_FULL				= "-f";
-const char * STR_OPT_HELP				= "-h";
-const char * STR_OPT_PRECISION			= "-p";
-const char * STR_OPT_STATE				= "-s";
-const char * STR_OPT_VERBOSE			= "-v";
-
-// -- LONG OPTIONS --
-const char * STR_LONGOPT_ALL			= "--all";
-const char * STR_LONGOPT_HELP			= "--help";
-const char * STR_LONGOPT_VERSION		= "--version";
-
-// -- ERRORS --
-const char * STR_ERR					= "ERROR - ";
-const char * STR_ERR_PARAM				= "wrong/missing parameter";
-const char * STR_ERR_UNKNOWN_OPT		= "unknown option.";
-
-void PrintHelp();
-void PrintUsage();
-void PrintVersion();
+const char * STR_APP_VERSION			= "0.01.01";
 
 int main(int argc, char * argv[])
 {
 	// -- PARSE OPTIONS --
-	bool optPrintAll = false;
+	OptionsParser options(argc, argv, STR_APP_NAME, STR_APP_VERSION);
 
-	int optDelay = 100;
-	const int MIN_DELAY = 33;
+	// exit after error
+	if(options.HasError())
+		return options.GetErrorCode();
 
-	unsigned int optPrecision = 2;
-
-	bool optVerbose = false;
-
-	int optCPU = -1;
-
-	int optState = -1;
-
-	bool optFull = false;
-
-	// skip program name
-	int index = 1;
-
-	while(index < argc)
-	{
-		std::string arg(argv[index]);
-
-		if(STR_OPT_ALL == arg || arg == STR_LONGOPT_ALL)
-			optPrintAll = true;
-		else if(STR_OPT_DELAY == arg)
-		{
-			std::string param(argv[++index]);
-
-			try
-			{
-				optDelay = std::stoi(param);
-
-				if(optDelay < MIN_DELAY)
-					optDelay = MIN_DELAY;
-			}
-			catch(std::logic_error e)
-			{
-				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
-
-				PrintUsage();
-				return 1;
-			}
-		}
-		else if(STR_OPT_PRECISION == arg)
-		{
-			std::string param(argv[++index]);
-
-			try
-			{
-				optPrecision = std::stoi(param);
-			}
-			catch(std::logic_error e)
-			{
-				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
-
-				PrintUsage();
-				return 1;
-			}
-		}
-		else if(STR_OPT_CPU == arg)
-		{
-			std::string param(argv[++index]);
-
-			try
-			{
-				optCPU = std::stoi(param);
-			}
-			catch(std::logic_error e)
-			{
-				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
-
-				PrintUsage();
-				return 1;
-			}
-		}
-		else if(STR_OPT_STATE == arg)
-		{
-			std::string param(argv[++index]);
-
-			try
-			{
-				optState = std::stoi(param);
-			}
-			catch(std::logic_error e)
-			{
-				std::cout << STR_ERR << STR_ERR_PARAM << std::endl;
-
-				PrintUsage();
-				return 1;
-			}
-		}
-		else if(STR_OPT_VERBOSE == arg)
-			optVerbose = true;
-		else if(STR_OPT_FULL == arg)
-			optFull = true;
-		else if(STR_OPT_HELP == arg || STR_LONGOPT_HELP == arg)
-		{
-			PrintHelp();
-			return 0;
-		}
-		else if(STR_LONGOPT_VERSION == arg)
-		{
-			PrintVersion();
-			return 0;
-		}
-		else
-		{
-			std::cout << STR_ERR << STR_ERR_UNKNOWN_OPT << std::endl;
-
-			PrintUsage();
-			return 1;
-		}
-
-		++index;
-	}
+	// exit after printing help or version
+	if(options.ExitRequested())
+		return 0;
 
 	// -- GET SNAPSHOTS --
 	// snapshot 1
 	CPUSnapshot s1;
 
-	// 100ms pause
-	std::this_thread::sleep_for(std::chrono::milliseconds(optDelay));
+	// pause
+	std::this_thread::sleep_for(std::chrono::milliseconds(options.GetOptionDelay())	);
 
 	// snapshot 2
 	CPUSnapshot s2;
@@ -179,81 +48,36 @@ int main(int argc, char * argv[])
 	// -- PRINT STATS --
 	CPUStatsPrinter printer(s1, s2);
 
-	printer.SetPrecision(optPrecision);
-	printer.SetVerbose(optVerbose);
+	printer.SetPrecision(options.GetOptionPrecision());
+	printer.SetVerbose(options.GetOptionVerbose());
 
-	if(optPrintAll)
+	if(options.GetOptionPrintAll())
 	{
-		if(optFull)
+		if(options.GetOptionFull())
 			printer.PrintFullStatePercentageAll();
-		else if(optState >= 0)
-			printer.PrintStatePercentageAll(optState);
+		else if(options.GetOptionState() >= 0)
+			printer.PrintStatePercentageAll(options.GetOptionState());
 		else
 			printer.PrintActivePercentageAll();
 	}
-	else if(optCPU >= 0)
+	else if(options.GetOptionCPU() >= 0)
 	{
-		if(optFull)
-			printer.PrintFullStatePercentageCPU(optCPU);
-		else if(optState >= 0)
-			printer.PrintStatePercentageCPU(optState, optCPU);
+		if(options.GetOptionFull())
+			printer.PrintFullStatePercentageCPU(options.GetOptionCPU());
+		else if(options.GetOptionState() >= 0)
+			printer.PrintStatePercentageCPU(options.GetOptionState(), options.GetOptionCPU());
 		else
-			printer.PrintActivePercentageCPU(optCPU);
+			printer.PrintActivePercentageCPU(options.GetOptionCPU());
 	}
 	else
 	{
-		if(optFull)
+		if(options.GetOptionFull())
 			printer.PrintFullStatePercentageTotal();
-		else if(optState >= 0)
-			printer.PrintStatePercentageTotal(optState);
+		else if(options.GetOptionState() >= 0)
+			printer.PrintStatePercentageTotal(options.GetOptionState());
 		else
 			printer.PrintActivePercentageTotal();
 	}
 
 	return 0;
-}
-
-void PrintHelp()
-{
-	PrintUsage();
-
-	const char * STR_LMARGIN = "    ";
-
-	std::cout << std::endl;
-
-	std::cout << "launching the program with no option will print the active time percentage of the total CPU" << std::endl;
-
-	std::cout << std::endl;
-
-	std::cout << "PRINT OPTIONS" << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "\t\t" << "print active time percentage for all CPUs, starting with total. " << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_CPU << " <cpu>" << "\t\t" << "print active time percentage only for selected CPU." << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_FULL << "\t\t\t" << "print time percentage of all states." << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_PRECISION << " <precision>" << "\t" << "set the decimal precision of printed numbers. Default is 2." << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_STATE << " <state>" << "\t\t" << "print time percentage for specific state [0-9]." << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_VERBOSE << "\t\t\t" << "enable verbose mode." << std::endl;
-	std::cout << std::endl;
-
-	std::cout << "OTHER OPTIONS" << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_HELP << " | " << STR_LONGOPT_HELP << "\t\t" << "print this help." << std::endl;
-	std::cout << STR_LMARGIN << STR_LONGOPT_VERSION << "\t\t" << "print the version number" << std::endl;
-	std::cout << STR_LMARGIN << STR_OPT_DELAY << " <time>" << "\t\t" << "set delay time (in ms) between 2 snapshots of CPU data. Default is 100 ms." << std::endl;
-
-	std::cout << std::endl;
-}
-
-void PrintUsage()
-{
-	const char * STR_LMARGIN = "                ";
-
-	std::cout	<< "usage: " << STR_APP_NAME << " [" << STR_LONGOPT_VERSION << "] [" << STR_OPT_HELP << " | " << STR_LONGOPT_HELP
-				<< "] [" << STR_OPT_ALL << " | " << STR_LONGOPT_ALL << "] [" << STR_OPT_DELAY << " <time>] ["
-				<< STR_OPT_PRECISION << " <precision>]" << std::endl
-				<< STR_LMARGIN << "[" << STR_OPT_CPU << " <cpu>] [" << STR_OPT_FULL << "] [" << STR_OPT_VERBOSE << "] [" << STR_OPT_STATE << " <state>]"
-				<< std::endl;
-}
-
-void PrintVersion()
-{
-	std::cout << STR_APP_NAME << " - version " << STR_APP_VERSION << std::endl;
 }
