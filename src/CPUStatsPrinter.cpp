@@ -19,6 +19,8 @@ const char * CPUStatsPrinter::STR_STATES[CPUData::NUM_CPU_STATES]	= {	"usr",
 																		"gun" };
 
 
+// == PUBLIC FUNCTIONS ==
+
 CPUStatsPrinter::CPUStatsPrinter(const CPUSnapshot& s1, const CPUSnapshot& s2)
 	: mS1(s1)
 	, mS2(s2)
@@ -41,18 +43,6 @@ void CPUStatsPrinter::PrintActivePercentageTotal()
 		std::cout << "%";
 
 	std::cout << std::endl;
-}
-
-void CPUStatsPrinter::PrintActivePercentageAll()
-{
-	// PRINT TOTAL
-	PrintActivePercentageTotal();
-
-	// PRINT ALL CPUS
-	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
-
-	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
-		PrintActivePercentageCPU(i);
 }
 
 void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
@@ -79,6 +69,18 @@ void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
 	std::cout << std::endl;
 }
 
+void CPUStatsPrinter::PrintActivePercentageAll()
+{
+	// PRINT TOTAL
+	PrintActivePercentageTotal();
+
+	// PRINT ALL CPUS
+	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
+
+	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
+		PrintActivePercentageCPU(i);
+}
+
 void CPUStatsPrinter::PrintStatePercentageTotal(unsigned int state)
 {
 	if(mVerbose)
@@ -87,18 +89,6 @@ void CPUStatsPrinter::PrintStatePercentageTotal(unsigned int state)
 	PrintStatePercentageNoLabelTotal(state);
 
 	std::cout << std::endl;
-}
-
-void CPUStatsPrinter::PrintStatePercentageAll(unsigned int state)
-{
-	// PRINT TOTAL
-	PrintStatePercentageTotal(state);
-
-	// PRINT ALL CPUS
-	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
-
-	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
-		PrintStatePercentageCPU(state, i);
 }
 
 void CPUStatsPrinter::PrintStatePercentageCPU(unsigned int state, unsigned int cpu)
@@ -118,6 +108,18 @@ void CPUStatsPrinter::PrintStatePercentageCPU(unsigned int state, unsigned int c
 	PrintStatePercentageNoLabelCPU(state, cpu);
 
 	std::cout << std::endl;
+}
+
+void CPUStatsPrinter::PrintStatePercentageAll(unsigned int state)
+{
+	// PRINT TOTAL
+	PrintStatePercentageTotal(state);
+
+	// PRINT ALL CPUS
+	const unsigned int NUM_ENTRIES = mS1.GetNumEntries();
+
+	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
+		PrintStatePercentageCPU(state, i);
 }
 
 void CPUStatsPrinter::PrintFullStatePercentageTotal()
@@ -162,6 +164,8 @@ void CPUStatsPrinter::PrintFullStatePercentageAll()
 	for(unsigned int i = 0; i < NUM_ENTRIES; ++i)
 		PrintFullStatePercentageCPU(i);
 }
+
+// == PRIVATE FUNCTIONS ==
 
 float CPUStatsPrinter::GetPercActiveTotal()
 {

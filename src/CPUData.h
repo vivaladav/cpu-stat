@@ -11,9 +11,7 @@ public:
 
 	std::size_t GetActiveTime() const;
 	std::size_t GetIdleTime() const;
-
 	std::size_t GetStateTime(unsigned int state) const;
-
 	std::size_t GetTotalTime() const;
 
 	const std::string & GetLabel() const;
@@ -50,6 +48,7 @@ private:
 	std::size_t mTimes[NUM_CPU_STATES];
 };
 
+// == INLINE FUNCTIONS ==
 inline 	std::size_t CPUData::GetActiveTime() const
 {
 	return	mTimes[S_USER] +
@@ -90,3 +89,8 @@ inline std::size_t CPUData::GetTotalTime() const
 }
 
 inline const std::string & CPUData::GetLabel() const { return mLabel; }
+
+inline bool CPUData::IsDataCPUStats(const std::string & line)
+{
+	return (!line.compare(0, LEN_STR_CPU, STR_CPU));
+}

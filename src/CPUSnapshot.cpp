@@ -2,6 +2,10 @@
 
 #include <fstream>
 
+const int CPUSnapshot::INDEX_TOT = 0;
+
+// == PUBLIC FUNCTIONS ==
+
 CPUSnapshot::CPUSnapshot()
 {
 	std::ifstream fileStat("/proc/stat");

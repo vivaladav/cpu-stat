@@ -7,6 +7,8 @@ const std::string CPUData::STR_TOT("tot");
 
 const std::size_t CPUData::LEN_STR_CPU = 3;
 
+// == PUBLIC FUNCTIONS ==
+
 void CPUData::ReadData(const std::string & line)
 {
 	std::istringstream ss(line);
@@ -25,9 +27,3 @@ void CPUData::ReadData(const std::string & line)
 	for(int i = 0; i < NUM_CPU_STATES; ++i)
     	ss >> mTimes[i];
 }
-
-bool CPUData::IsDataCPUStats(const std::string & line)
-{
-	return (!line.compare(0, LEN_STR_CPU, STR_CPU));
-}
-

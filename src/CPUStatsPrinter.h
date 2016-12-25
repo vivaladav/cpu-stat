@@ -1,3 +1,7 @@
+#pragma once
+
+// CPUStatsPrinter - object which prints stats extracted by 2 CPUSnapshots.
+
 #include "CPUData.h"
 
 class CPUSnapshot;
