@@ -204,9 +204,11 @@ float CPUStatsPrinter::GetPercState(unsigned int state, unsigned int cpu)
 void CPUStatsPrinter::PrintStatePercentageNoLabelTotal(unsigned int state)
 {
 	if(mVerbose)
+	{
 		std:: cout << STR_STATES[state] << ": ";
+		std::cout.width(STATE_PERC_BASE_W + mPrecision);
+	}
 
-	std::cout.width(STATE_PERC_BASE_W + mPrecision);
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(mPrecision);
 	std::cout << GetPercStateTotal(state);
@@ -218,9 +220,11 @@ void CPUStatsPrinter::PrintStatePercentageNoLabelTotal(unsigned int state)
 void CPUStatsPrinter::PrintStatePercentageNoLabelCPU(unsigned int state, unsigned int cpu)
 {
 	if(mVerbose)
+	{
 		std::cout << STR_STATES[state] << ": ";
+		std::cout.width(STATE_PERC_BASE_W + mPrecision);
+	}
 
-	std::cout.width(STATE_PERC_BASE_W + mPrecision);
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(mPrecision);
 	std::cout << GetPercState(state, cpu);
