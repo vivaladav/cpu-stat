@@ -1,0 +1,13 @@
+Import('env')
+
+print '[I] building cpu-stat (' + env['mode'] + ')'
+
+# sources
+sources = env.Glob ('*.cpp');
+
+# build
+program = env.Program(target = '#/bin/%s/cpu-stat' % env['mode'], source = [sources])
+
+# install
+env.Install('/usr/bin/', program)
+env.Alias('install', '/usr/bin/')
