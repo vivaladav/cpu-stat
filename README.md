@@ -1,5 +1,13 @@
 # cpu-stat
-a simple program for visualizing CPU statitics on Linux systems.
+A command line program to get CPU usage statistics on Linux systems.
+
+I created cpu-stat to have a quick and simple answer to the question "what's the CPU usage of my system right now?" and that's what you get when running the program with no options.
+
+The intended use is for scripts or system monitoring tools which do not want to parse */proc/stat* directly to get CPU/ usage stats.
+
+For people interested in understanding more how things work under the hood, I wrote a [tutorial](http://blog.davidecoppola.com/2016/12/cpp-program-to-get-cpu-usage-from-command-line-in-linux/) describing a much simpler version of this program.
+
+NOTE: cpu-stat requires Linux kernel 2.6.33 or newer.
 
 ## Installation
 To build cpu-stat you will need [SCons](http://scons.org/).
@@ -60,12 +68,6 @@ $ cpu-stat
 2.50
 ```
 
-Print percentage of idle time (state 3) for CPU 2 using 4 digits as decimal precision:
-```
-$ cpu-stat -s 3 -c 2 -p 4
-100.0000
-```
-
 Print percentage of active time for all CPUs in verboses mode (with labels):
 ```
 $ cpu-stat -a -v
@@ -76,7 +78,13 @@ tot] 5.00%
   3] 0.00%
 ```
 
-Print perentage of all states for all CPUs in verbose mode (with labels):
+Print percentage of idle time (state 3) for CPU 2 using 4 digits as decimal precision:
+```
+$ cpu-stat -s 3 -c 2 -p 4
+100.0000
+```
+
+Print percentage of all states for all CPUs in verbose mode (with labels):
 ```
 $ cpu-stat -a -v -f
 tot] usr:   0.00% | sys:   0.00% | nic:   0.00% | idl: 100.00% | iow:   0.00% | hir:   0.00% | sir:   0.00% | ste:   0.00% | gue:   0.00% | gun:   0.00% | 
@@ -85,3 +93,7 @@ tot] usr:   0.00% | sys:   0.00% | nic:   0.00% | idl: 100.00% | iow:   0.00% | 
   2] usr:   0.00% | sys:   0.00% | nic:   0.00% | idl: 100.00% | iow:   0.00% | hir:   0.00% | sir:   0.00% | ste:   0.00% | gue:   0.00% | gun:   0.00% | 
   3] usr:   0.00% | sys:   0.00% | nic:   0.00% | idl:  90.91% | iow:   9.09% | hir:   0.00% | sir:   0.00% | ste:   0.00% | gue:   0.00% | gun:   0.00% |
 ```
+
+## Contribute
+
+If you want to contribute to cpu-stat check out this guide about [how to contribute to an open source project on GitHub](http://blog.davidecoppola.com/2016/11/howto-contribute-to-open-source-project-on-github/) first.
