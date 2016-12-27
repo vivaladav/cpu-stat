@@ -1,6 +1,8 @@
 # cpu-stat
 A command line program to get CPU usage statistics on Linux systems.
 
+![cpu-stat](https://github.com/vivaladav/cpu-stat/blob/master/data/imgs/CPU-STAT-logo-256.png?raw=true)
+
 I created cpu-stat to have a quick and simple answer to the question "what's the CPU usage of my system right now?" and that's what you get when running the program with no options.
 
 The intended use is for scripts or system monitoring tools which do not want to parse */proc/stat* directly to get CPU/ usage stats.
