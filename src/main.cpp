@@ -8,6 +8,7 @@
  *	0.00.03		22-Dec-2016		Introduced options.
  *	0.01.00		25-Dec-2016		Implemented all basic features.
  *	0.01.01		25-Dec-2016		Introduced OptionsParser and code polishing.
+ *	0.01.02		27-Dec-2016		Added scons build system.
  *
 */
 
@@ -20,7 +21,7 @@
 
 // -- PROGRAM DATA --
 const char * STR_APP_NAME				= "cpp-stat";
-const char * STR_APP_VERSION			= "0.01.01";
+const char * STR_APP_VERSION			= "0.01.02";
 
 int main(int argc, char * argv[])
 {
