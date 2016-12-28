@@ -5,7 +5,7 @@ A command line program to get CPU usage statistics on Linux systems.
 
 I created cpu-stat to have a quick and simple answer to the question "what's the CPU usage of my system right now?" and that's what you get when running the program with no options.
 
-The intended use is for scripts or system monitoring tools which do not want to parse */proc/stat* directly to get CPU/ usage stats.
+The intended use is for scripts or system monitoring tools which do not want to parse */proc/stat* directly to get CPU usage stats.
 
 For people interested in understanding more how things work under the hood, I wrote a [tutorial](http://blog.davidecoppola.com/2016/12/cpp-program-to-get-cpu-usage-from-command-line-in-linux/) describing a much simpler version of this program.
 
