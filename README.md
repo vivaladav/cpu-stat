@@ -3,11 +3,11 @@ A command line program to get CPU usage statistics on Linux systems.
 
 ![cpu-stat](https://github.com/vivaladav/cpu-stat/blob/master/data/imgs/CPU-STAT-logo-256.png?raw=true)
 
-I created cpu-stat to have a quick and simple answer to the question "what's the CPU usage of my system right now?" and that's what you get when running the program with no options.
+I created cpu-stat to have a quick and simple answer to the question "what's the CPU usage of my system right now?" and that's what you get when you run the program with no options.
 
 The intended use is for scripts or system monitoring tools which do not want to parse */proc/stat* directly to get CPU usage stats.
 
-For people interested in understanding more how things work under the hood, I wrote a [tutorial](http://blog.davidecoppola.com/2016/12/cpp-program-to-get-cpu-usage-from-command-line-in-linux/) describing a much simpler version of this program.
+For people interested in understanding more about how things work under the hood, I wrote a [tutorial](http://blog.davidecoppola.com/2016/12/cpp-program-to-get-cpu-usage-from-command-line-in-linux/) describing a much simpler version of this program and providing more information on the different CPU states.
 
 NOTE: cpu-stat requires Linux kernel 2.6.33 or newer.
 
@@ -70,7 +70,7 @@ $ cpu-stat
 2.50
 ```
 
-Print percentage of active time for all CPUs in verboses mode (with labels):
+Print percentage of active time for all CPUs in verbose mode (with labels):
 ```
 $ cpu-stat -a -v
 tot] 5.00%
