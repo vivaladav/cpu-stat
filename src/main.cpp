@@ -20,7 +20,7 @@
 #include <thread>
 
 // -- PROGRAM DATA --
-const char * STR_APP_NAME				= "cpp-stat";
+const char * STR_APP_NAME			= "cpu-stat";
 const char * STR_APP_VERSION			= "0.01.02";
 
 int main(int argc, char * argv[])
