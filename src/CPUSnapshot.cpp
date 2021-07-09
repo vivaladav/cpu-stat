@@ -24,4 +24,6 @@ CPUSnapshot::CPUSnapshot()
 			entry.ReadData(line);
 		}
 	}
+
+	fileStat.close();
 }
