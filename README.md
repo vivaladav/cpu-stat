@@ -37,7 +37,7 @@ This will build cpu-stat in release mode:
 This will install cpu-stat in */usr/local/bin/* after a build is completed.
 
     $ cd build
-    $ make install
+    $ sudo make install
 
 **clean release build**
 
