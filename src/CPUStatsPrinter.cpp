@@ -69,6 +69,33 @@ void CPUStatsPrinter::PrintActivePercentageCPU(unsigned int cpu)
 	std::cout << std::endl;
 }
 
+std::string CPUStatsPrinter::GetActivePercentageCPU(unsigned int cpu)
+{
+	std::stringstream ss;
+
+	if(cpu >= mS1.GetNumEntries())
+	{
+		ss << "ERROR - CPU " << cpu << " not available.";
+		return ss.str();
+	}
+
+	if(mVerbose)
+	{
+		ss.width(CPU_LABEL_W);
+		ss << mS1.GetLabel(cpu) << "] ";
+	}
+
+	ss.setf(std::ios::fixed, std::ios::floatfield);
+	ss.precision(mPrecision);
+	ss << GetPercActive(cpu);
+
+	if(mVerbose)
+		ss << "%";
+
+	return ss.str();
+}
+
+
 void CPUStatsPrinter::PrintActivePercentageAll()
 {
 	// PRINT TOTAL

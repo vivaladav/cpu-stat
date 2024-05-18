@@ -3,6 +3,8 @@
 // CPUStatsPrinter - object which prints stats extracted by 2 CPUSnapshots.
 
 #include "CPUData.h"
+//#include "CPUSnapshot.h"
+#include <sstream>
 
 class CPUSnapshot;
 
@@ -13,6 +15,8 @@ public:
 
 	void PrintActivePercentageTotal();
 	void PrintActivePercentageCPU(unsigned int cpu);
+	std::string GetActivePercentageCPU(unsigned int cpu);
+
 	void PrintActivePercentageAll();
 
 	void PrintStatePercentageTotal(unsigned int state);

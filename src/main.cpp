@@ -15,9 +15,11 @@
 #include "CPUSnapshot.h"
 #include "CPUStatsPrinter.h"
 #include "OptionsParser.h"
+#include "CPUStat.h"
 
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 // -- PROGRAM DATA --
 const char * STR_APP_NAME			= "cpu-stat";
@@ -36,6 +38,8 @@ int main(int argc, char * argv[])
 	if(options.ExitRequested())
 		return 0;
 
+	CPUStat cpuStat;
+
 	// -- GET SNAPSHOTS --
 	// snapshot 1
 	CPUSnapshot s1;
@@ -45,6 +49,10 @@ int main(int argc, char * argv[])
 
 	// snapshot 2
 	CPUSnapshot s2;
+
+	std::cout << cpuStat.GetActivePercentageCPU(4,5) << std::endl;
+
+	return 0;
 
 	// -- PRINT STATS --
 	CPUStatsPrinter printer(s1, s2);
@@ -69,6 +77,8 @@ int main(int argc, char * argv[])
 			printer.PrintStatePercentageCPU(options.GetOptionState(), options.GetOptionCPU());
 		else
 			printer.PrintActivePercentageCPU(options.GetOptionCPU());
+			std::cout << "GetActivePercentageCPU:" << printer.GetActivePercentageCPU(options.GetOptionCPU()) << std::endl;
+
 	}
 	else
 	{

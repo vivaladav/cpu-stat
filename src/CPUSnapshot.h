@@ -5,6 +5,7 @@
 #include "CPUData.h"
 
 #include <vector>
+#include <chrono>
 
 class CPUSnapshot
 {
@@ -28,8 +29,14 @@ public:
 	std::size_t GetTotalTimeTotal() const;
 	std::size_t GetTotalTime(unsigned int cpu) const;
 
+	double GetDurationFromConstruct();
+
+	bool didPassDurationFromConstructMs(double durationMs);
+
 private:
 	static const int INDEX_TOT;
+
+	std::chrono::time_point<std::chrono::high_resolution_clock> timeTaken = std::chrono::high_resolution_clock::now();
 
 private:
 	std::vector<CPUData> mEntries;
