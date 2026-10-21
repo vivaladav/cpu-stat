@@ -29,7 +29,7 @@ public:
 	std::size_t GetTotalTime(unsigned int cpu) const;
 
 private:
-	static const int INDEX_TOT;
+	static const std::vector<CPUData>::size_type INDEX_TOT;
 
 private:
 	std::vector<CPUData> mEntries;
