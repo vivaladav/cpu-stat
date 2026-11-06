@@ -4,6 +4,8 @@
 
 #include "CPUData.h"
 
+#include <cstddef>
+#include <string>
 #include <vector>
 
 class CPUSnapshot

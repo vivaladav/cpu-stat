@@ -2,6 +2,7 @@
 
 // CPUData - container of stats for a CPU
 
+#include <cstddef>
 #include <string>
 
 class CPUData
