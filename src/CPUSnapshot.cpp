@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include "CPUData.h"
+
 const int CPUSnapshot::INDEX_TOT = 0;
 
 // == PUBLIC FUNCTIONS ==
